@@ -1,0 +1,68 @@
+{% extends 'agenda/base.html' %}
+{% block content %}
+    <center>
+        <h1>Find events</h1>
+        <form action="{% url 'reminder' %}" method="POST">
+            {% csrf_token %}
+            <label for="search"></label>
+            <input type="text" name="search" placeholder="Search events" required>
+            <label for="category"></label>
+            <select name="category">
+                <option value="" {% if not category %}selected{% endif %}>All categories</option>
+                <option value="1" {% if event.category == 1 %}selected{% endif %}>Appointment</option>
+                <option value="2" {% if event.category == 2 %}selected{% endif %}>Work</option>
+                <option value="3" {% if event.category == 3 %}selected{% endif %}>School</option>
+                <option value="4" {% if event.category == 4 %}selected{% endif %}>Personal Life</option>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+
+        {% if search %}
+            {% if results %}
+                <article class="events events-shown">
+                {% for result in results %}
+                    <ul>
+                        <li>{{ result.date }}, {{ result.time }}</li>
+                        <li>{{ result.title }}</li>
+                        <li>&#x1F4CD; {{ result.location }}</li>
+                        <li>{{ result.description }}</li>
+                        <div class="buttons">
+                            <li><a href="{% url 'edit_event' result.id %}" class="btn">Edit</a></li>
+                            <li>
+                                <form action="{% url 'delete_event' result.id %}" method="POST" class="delete">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn delete-btn">Delete</button>
+                                </form>
+                            </li>
+                        </div>
+                    </ul>
+                {% endfor %}
+                </article>
+            {% else %}
+                <h2>No match</h2>
+            {% endif %}
+        {% endif %}
+
+        <h1 class="reminder-title">Upcoming events</h1>
+        <article class="events events-shown">
+        {% for reminder in reminders %}
+            <ul>
+                <li>{{ reminder.event.date }}, {{ reminder.event.time }}</li>
+                <li>{{ reminder.event.title }}</li>
+                <li>&#x1F4CD; {{ reminder.event.location }}</li>
+                <li>{{ reminder.event.description }}</li>
+                <li>&#9733; {{ reminder.message }}</li>
+                <div class="buttons">
+                    <li><a href="{% url 'edit_event' reminder.id %}" class="btn">Edit</a></li>
+                    <li>
+                        <form action="{% url 'delete_event' reminder.id %}" method="POST" class="delete">
+                            {% csrf_token %}
+                            <button type="submit" class="btn delete-btn">Delete</button>
+                        </form>
+                    </li>
+                </div>
+            </ul>
+        {% endfor %}
+        </article>
+    </center>
+{% endblock %}

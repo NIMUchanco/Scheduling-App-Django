@@ -1,0 +1,34 @@
+{% extends 'agenda/base.html' %}
+{% block content %}
+    <center>
+        <h1>Schedule an event</h1>
+        <form action="{% url 'schedule_event' %}" method="POST">
+            {% csrf_token %}
+            <label for="title">Title</label>
+            <input type="text" name="title" required />
+            <label for="date">Date</label>
+            <input type="date" name="date" required />
+            <label for="time">Time</label>
+            <input type="time" name="time" required />
+            <label for="location">Location</label>
+            <input type="text" name="location" />
+            <label for="description">Description</label>
+            <textarea name="description" id="description"></textarea>
+            <label for="category">Category</label>
+            <select name="category" id="category">
+                <option value="1">Appointment</option>
+                <option value="2">Work</option>
+                <option value="3">School</option>
+                <option value="4">Personal Life</option>
+            </select>
+            <label for="reminder_date">Remind me until</label>
+            <input type="date" name="reminder_date">
+            <label for="message">Message</label>
+            <textarea id="message" name="message"></textarea>
+            <div class="buttons">
+                <button type="reset">Reset</button>
+                <button type="submit">Schedule</button>
+            </div>
+        </form>
+    </center>
+{% endblock %}

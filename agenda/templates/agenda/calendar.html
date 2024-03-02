@@ -1,0 +1,31 @@
+{% extends 'agenda/base.html' %}
+{% load static %}
+{% block content %}
+    <center>
+        {{ cal|safe }}
+
+        <a href="{% url 'agenda' year=prev_year month=prev_month %}" class="arrow">&lt; Prev</a>
+        <a href="{% url 'agenda' year=next_year month=next_month %}" class="arrow">Next &gt;</a>
+
+        <article class="events">
+            {% for event in events %}
+            <ul data-date="{{ event.date|date:'F j, Y' }}">
+                <li>{{ event.title }}</li>
+                <li><a href="{% url 'edit_event' event.id %}" class="btn">Edit</a></li>
+                <li>
+                    <form action="{% url 'delete_event' event.id %}" method="POST" class="delete">
+                        {% csrf_token %}
+                        <button type="submit" class="btn delete-btn">Delete</button>
+                    </form>
+                </li>
+                <li>&#x1F4CD; {{ event.location }}</li>
+                <li class="list-date">{{ event.date }}, {{ event.time }}</li>
+                <li>{{ event.description }}</li>
+            </ul>
+            {% endfor %}
+        </article>
+    </center>
+    {% block custom_js %}
+        <script src="{% static 'agenda.js' %}" type="module"></script>
+    {% endblock %}
+{% endblock %}

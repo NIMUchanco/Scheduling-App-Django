@@ -1,0 +1,31 @@
+{% extends 'agenda/base.html' %}
+{% block content %}
+    <center>
+        <h1>Edit Event</h1>
+        <form action="{% url 'edit_event' event.id %}" method="post">
+            {% csrf_token %}
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ event.title }}">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" value="{{ event.date|date:'Y-m-d' }}">
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time" value="{{ event.time|time:'H:i' }}">
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" value="{{ event.location }}">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description">{{ event.description }}</textarea>
+            <label>Category:</label>
+            <select name="category">
+                <option value="1" {% if event.category == 1 %}selected{% endif %}>Appointment</option>
+                <option value="2" {% if event.category == 2 %}selected{% endif %}>Work</option>
+                <option value="3" {% if event.category == 3 %}selected{% endif %}>School</option>
+                <option value="4" {% if event.category == 4 %}selected{% endif %}>Personal Life</option>
+            </select>
+            <label for="reminder_date">Remind me until:</label>
+            <input type="date" id="reminder_date" name="reminder_date" value="{{ reminder.reminder_date|date:'Y-m-d' }}">
+            <label for="message">Message:</label>
+            <textarea id="message" name="message">{{ reminder.message }}</textarea>
+            <button type="submit">Save</button>
+        </form>
+    </center>
+{% endblock %}
